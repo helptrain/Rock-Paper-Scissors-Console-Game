@@ -6,7 +6,7 @@ namespace RPS_Console_App
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Thomas Pollard");
         }
     }
 }
