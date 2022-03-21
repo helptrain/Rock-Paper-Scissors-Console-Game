@@ -10,6 +10,7 @@ namespace RPS_Console_App
             Console.WriteLine("Put name here");
             Console.WriteLine("Put name here");
             Console.WriteLine("Put name here");
+            Console.WriteLine("Put name here");
         }
     }
 }
