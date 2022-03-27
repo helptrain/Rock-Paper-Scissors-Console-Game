@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace RPS_Library
 {
-    public class Class1
+    public enum HandSignalType
     {
+        Rock,
+        Paper,
+        Scissors
     }
 }
