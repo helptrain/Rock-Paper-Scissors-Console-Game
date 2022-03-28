@@ -16,10 +16,15 @@ namespace RPS_Service
 
             try
             {
-                servHost = new ServiceHost(typeof(Game));
+                // Register the service address
+                servHost = new ServiceHost(typeof(Game), new Uri("net.tcp://localhost:40000/RPS_Library/"));
+
+                // Register the service contract and binding
+                servHost.AddServiceEndpoint(typeof(IGame), new NetTcpBinding(), "GameService");
 
                 // Run the service
                 servHost.Open();
+
                 Console.WriteLine("Service started. Please any key to quit.");
             }
             catch (Exception ex)

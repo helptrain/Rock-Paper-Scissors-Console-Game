@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
@@ -52,6 +53,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RPS_Library\RPS_Library.csproj">
+      <Project>{7acef4c0-e197-40a7-b539-b4220c5f024a}</Project>
+      <Name>RPS_Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RPS_Service\RPS_Service.csproj">
       <Project>{ad4d48cd-7602-4c9a-b176-5797c0cd8fa3}</Project>
       <Name>RPS_Service</Name>

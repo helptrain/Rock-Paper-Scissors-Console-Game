@@ -20,6 +20,9 @@ namespace RPS_Library
 
         public Player winner;
 
+        // needed for loading as a service
+        public Game() { }
+
         public Game(Player p1, Player p2)
         {
             playerOne = p1;
