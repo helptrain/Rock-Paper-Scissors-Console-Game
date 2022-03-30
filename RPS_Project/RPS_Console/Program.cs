@@ -22,10 +22,7 @@ namespace RPS_Console
 
             try
             {
-                ChannelFactory<IGame> channel = new ChannelFactory<IGame>(
-                new NetTcpBinding(), new EndpointAddress("net.tcp://localhost:40000/RPS_Library/GameService"));
-
-                game = channel.CreateChannel();
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
