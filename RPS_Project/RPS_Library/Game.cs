@@ -12,11 +12,13 @@ namespace RPS_Library
     {
         private const int MAX_CLIENTS = 2; //TODO: Change this if needed
 
-        private Dictionary<string, ICallback> callbacks = new Dictionary<string, ICallback>();
+        private Dictionary<int, ICallback> callbacks = new Dictionary<int, ICallback>();
         private List<HandSignalType> choices = new List<HandSignalType>();
 
         public Player playerOne;
         public Player playerTwo;
+
+        private int nextPlayer;
 
         public Player winner;
 
@@ -32,27 +34,29 @@ namespace RPS_Library
         {
             return choices.ToArray<HandSignalType>();
         }
-        public bool Join(string clientName)
+        public int Join()
         {
-            if (callbacks.ContainsKey(clientName.ToUpper()))
+            ICallback callBack = OperationContext.Current.GetCallbackChannel<ICallback>();
+            if(callbacks.ContainsValue(callBack))
             {
-                return false;
-            }
-            if (callbacks.Count >= MAX_CLIENTS)
-            {
-                return false;
+                int i = callbacks.Values.ToList().IndexOf(callBack);
+                return callbacks.Keys.ElementAt(i);
             }
 
-            ICallback callBack = OperationContext.Current.GetCallbackChannel<ICallback>();
-            callbacks.Add(clientName.ToUpper(), callBack);
-            return true;
+            if(callbacks.Count == 2)
+            {
+                return 404;
+            }
+
+            callbacks.Add(nextPlayer, callBack);
+            return nextPlayer++;
         }
         public void Leave(string clientName)
         {
-            if (callbacks.ContainsKey(clientName.ToUpper()))
+            /*if (callbacks.ContainsKey(clientName.ToUpper()))
             {
                 callbacks.Remove(clientName.ToUpper());
-            }
+            }*/
         }
 
         public void PostChoice(HandSignalType choice)
@@ -64,12 +68,12 @@ namespace RPS_Library
         //Triggers callback
         private void UpdateAllPlayers()
         {
-            HandSignalType[] choiceArr = choices.ToArray<HandSignalType>();
-            callbacks.Values.ToList<ICallback>().ForEach(cb => cb.SendChoice(choiceArr));
+            /*HandSignalType[] choiceArr = choices.ToArray<HandSignalType>();
+            callbacks.Values.ToList<IGame>().ForEach(cb => cb.SendChoice(choiceArr));
             foreach(ICallback c in callbacks.Values)
             {
                 c.SendChoice(choiceArr);
-            }
+            }*/
         }
 
         public string Playing()

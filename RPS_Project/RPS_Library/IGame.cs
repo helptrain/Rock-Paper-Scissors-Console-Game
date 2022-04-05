@@ -11,7 +11,7 @@ namespace RPS_Library
     public interface IGame
     {
         [OperationContract]
-        bool Join(string clientName);
+        int Join();
 
         [OperationContract]
         void Leave(string clientName);

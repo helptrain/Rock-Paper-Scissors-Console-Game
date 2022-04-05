@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConcreteCallback.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="HandSignalType.cs" />
     <Compile Include="ICallback.cs" />

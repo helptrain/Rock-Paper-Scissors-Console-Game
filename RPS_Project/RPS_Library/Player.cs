@@ -9,11 +9,13 @@ namespace RPS_Library
     public class Player
     {
         public string PlayerName;
+        public int PlayerId;
         public HandSignalType HandSignal;
 
-        public Player(string name)
+        public Player(string name, int playerId)
         {
             PlayerName = name;
+            PlayerId = playerId;
         }
 
         public void PlaySignal(HandSignalType playedtype)

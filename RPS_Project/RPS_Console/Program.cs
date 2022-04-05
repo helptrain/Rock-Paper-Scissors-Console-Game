@@ -11,26 +11,28 @@ using RPS_Library;
 
 namespace RPS_Console
 {
-    public partial class Program : ICallback
+    public class Program
     {
         // Member variables
         private static IGame game = null;
-        private string player = "John";
-        //private string player2 = "Adam";
+        private static int id;
+        private static ConcreteCallback cc = new ConcreteCallback();
+        private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+        private static List<Player> players = new List<Player>();
+        private static Player player;
 
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Test");
 
-            try
-            {              
-                Console.ReadLine();
-            }
-            catch (Exception ex)
+            static void Main(string[] args)
             {
-                Console.WriteLine("Error: " + ex);
-            }
-        }
+                if(connectToGame())
+                {
+                    Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("ERROR: Too Many Clients Connected");
+                }
+             }
 
         // TODO: complete this 
         public void SendChoice(HandSignalType[] messages)
@@ -47,39 +49,45 @@ namespace RPS_Console
 
         private void UserExited()
         {
-            if (game != null)
+            /*if (game != null)
             {
                 // TODO: not sure what is supposed to be passed in 
                 game.Leave(player);
                 //game.Leave(player2);
                 Console.WriteLine("exited");
-            }             
+            }      */       
         }
-
         // Sets up a connection to the WCF service and subscribes to the callback messages
-        private void connectToGame()
+        private static bool connectToGame()
         {
             try
             {
                 // Configure the ABCs of using the MessageBoard service
-                DuplexChannelFactory<IGame> channel = new DuplexChannelFactory<IGame>(this, "GameService");
+                DuplexChannelFactory<IGame> channel = new DuplexChannelFactory<IGame>(cc, "GameService");
 
                 game = channel.CreateChannel();
 
-                if (game.Join(player))
+                id = game.Join();
+
+                player = new Player($"Player {id}", id);
+                players.Add(player);
+
+                if(id == 404)
                 {
-                    Console.WriteLine("get all msgs: " + game.GetAllChoices());
+                    return false;
                 }
-                else
-                {
-                    // Alias rejected by the service so nullify service proxies
-                    game = null;
-                    Console.WriteLine("ERROR: Alias in use. Please try again.");
-                }
+
+                Console.WriteLine("Welcome To the Game! ~\n");
+                Console.WriteLine($"Welcome player {player.PlayerName}");
+
+                return true;
+
+
             }
             catch (Exception e)
             {
                 Console.WriteLine("error: " + e.Message);
+                return false;
             }
         }
     }
