@@ -20,8 +20,9 @@ namespace RPS_Console
         private string player = "John";
         private string player2 = "Adam";
         private static Program obj = new Program();
+        private static HandSignalType[] choices = new HandSignalType[0];
         private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-        private static bool gameOver = false;
+        public static int counter = 0;
 
         static void Main(string[] args)
         {
@@ -35,27 +36,38 @@ namespace RPS_Console
                 while (!input)
                 {
 
-                    waitHandle.WaitOne(); //?
-
+                    //waitHandle.WaitOne(); //?
+                    Console.WriteLine($"Welcome Player: {counter}");
                     Console.WriteLine("Please choose:");
                     Console.WriteLine("1. Rock\n2. Paper\n3. Scissors");
 
+                    Console.Write("Please Choose an Option: ");
                     string choice = Console.ReadLine();
                     switch (choice)
                     {
                         case "1":
-                            input = true;
+                            game.PostChoice(HandSignalType.Rock);
                             break;
                         case "2":
-                            input = true;
+                            game.PostChoice(HandSignalType.Paper);
                             break;
                         case "3":
-                            input = true;
+                            game.PostChoice(HandSignalType.Scissors);
                             break;
                     }
+                    waitHandle.WaitOne();
+
+                    choices = game.GetAllChoices();
+
+                    game.SetPlayerHands(choices[1], choices[0]);
+
+                    Console.WriteLine(game.Playing());
+
+                    input = true;
 
                 }
             }
+            Console.ReadLine();
         }
 
 
@@ -64,7 +76,15 @@ namespace RPS_Console
         {
             try
             {
-                Console.WriteLine("sendChoice: " + messages);
+                foreach(var m in messages)
+                {
+                    Console.WriteLine(m);
+                }
+
+                if (messages.Length > 1)
+                {
+                    waitHandle.Set();
+                }
             }
             catch (Exception e)
             {
@@ -96,11 +116,13 @@ namespace RPS_Console
 
                 if (game.Join(player))
                 {
+                    counter = 1;
                     Console.WriteLine("get all msgs: " + game.GetAllChoices());
                     return true;
                 }
                 else if (game.Join(player2))
                 {
+                    counter = 2;
                     Console.WriteLine("get all msgs: " + game.GetAllChoices());
                     return true;
                 }

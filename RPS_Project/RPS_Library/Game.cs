@@ -15,8 +15,8 @@ namespace RPS_Library
         private Dictionary<string, ICallback> callbacks = new Dictionary<string, ICallback>();
         private List<HandSignalType> choices = new List<HandSignalType>();
 
-        public Player playerOne;
-        public Player playerTwo;
+        public Player playerOne = new Player("Player 1", 1);
+        public Player playerTwo = new Player("Player 2" , 2);
 
         public Player winner;
 
@@ -28,6 +28,13 @@ namespace RPS_Library
             playerOne = p1;
             playerTwo = p2;
         }
+
+        public void SetPlayerHands(HandSignalType p1, HandSignalType p2)
+        {
+            playerOne.PlaySignal(p1);
+            playerTwo.PlaySignal(p2);
+        }
+
         public HandSignalType[] GetAllChoices()
         {
             return choices.ToArray<HandSignalType>();
@@ -65,7 +72,6 @@ namespace RPS_Library
         private void UpdateAllPlayers()
         {
             HandSignalType[] choiceArr = choices.ToArray<HandSignalType>();
-            callbacks.Values.ToList<ICallback>().ForEach(cb => cb.SendChoice(choiceArr));
             foreach (ICallback c in callbacks.Values)
             {
                 c.SendChoice(choiceArr);
