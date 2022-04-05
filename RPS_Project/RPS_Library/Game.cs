@@ -12,13 +12,11 @@ namespace RPS_Library
     {
         private const int MAX_CLIENTS = 2; //TODO: Change this if needed
 
-        private Dictionary<int, ICallback> callbacks = new Dictionary<int, ICallback>();
+        private Dictionary<string, ICallback> callbacks = new Dictionary<string, ICallback>();
         private List<HandSignalType> choices = new List<HandSignalType>();
 
         public Player playerOne;
         public Player playerTwo;
-
-        private int nextPlayer;
 
         public Player winner;
 
@@ -34,29 +32,27 @@ namespace RPS_Library
         {
             return choices.ToArray<HandSignalType>();
         }
-        public int Join()
+        public bool Join(string clientName)
         {
+            if (callbacks.ContainsKey(clientName.ToUpper()))
+            {
+                return false;
+            }
+            if (callbacks.Count >= MAX_CLIENTS)
+            {
+                return false;
+            }
+
             ICallback callBack = OperationContext.Current.GetCallbackChannel<ICallback>();
-            if(callbacks.ContainsValue(callBack))
-            {
-                int i = callbacks.Values.ToList().IndexOf(callBack);
-                return callbacks.Keys.ElementAt(i);
-            }
-
-            if(callbacks.Count == 2)
-            {
-                return 404;
-            }
-
-            callbacks.Add(nextPlayer, callBack);
-            return nextPlayer++;
+            callbacks.Add(clientName.ToUpper(), callBack);
+            return true;
         }
         public void Leave(string clientName)
         {
-            /*if (callbacks.ContainsKey(clientName.ToUpper()))
+            if (callbacks.ContainsKey(clientName.ToUpper()))
             {
                 callbacks.Remove(clientName.ToUpper());
-            }*/
+            }
         }
 
         public void PostChoice(HandSignalType choice)
@@ -68,21 +64,21 @@ namespace RPS_Library
         //Triggers callback
         private void UpdateAllPlayers()
         {
-            /*HandSignalType[] choiceArr = choices.ToArray<HandSignalType>();
-            callbacks.Values.ToList<IGame>().ForEach(cb => cb.SendChoice(choiceArr));
-            foreach(ICallback c in callbacks.Values)
+            HandSignalType[] choiceArr = choices.ToArray<HandSignalType>();
+            callbacks.Values.ToList<ICallback>().ForEach(cb => cb.SendChoice(choiceArr));
+            foreach (ICallback c in callbacks.Values)
             {
                 c.SendChoice(choiceArr);
-            }*/
+            }
         }
 
         public string Playing()
         {
-            if(playerOne.HandSignal == HandSignalType.Rock && playerTwo.HandSignal == HandSignalType.Scissors)
+            if (playerOne.HandSignal == HandSignalType.Rock && playerTwo.HandSignal == HandSignalType.Scissors)
             {
                 this.winner = playerOne;
             }
-            else if(playerOne.HandSignal == HandSignalType.Paper && playerTwo.HandSignal == HandSignalType.Rock)
+            else if (playerOne.HandSignal == HandSignalType.Paper && playerTwo.HandSignal == HandSignalType.Rock)
             {
                 this.winner = playerOne;
             }

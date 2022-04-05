@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -11,7 +13,7 @@ namespace RPS_Library
     public interface IGame
     {
         [OperationContract]
-        int Join();
+        bool Join(string clientName);
 
         [OperationContract]
         void Leave(string clientName);

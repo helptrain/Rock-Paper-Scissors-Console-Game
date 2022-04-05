@@ -10,7 +10,7 @@ namespace RPS_Library
     {
         public void SendChoice(HandSignalType[] messages)
         {
-            Console.WriteLine("This Triggered");
+            Console.WriteLine("This Triggered!");
         }
     }
 }

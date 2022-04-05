@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,28 +12,52 @@ using RPS_Library;
 
 namespace RPS_Console
 {
-    public class Program
+    public partial class Program : ICallback
     {
+
         // Member variables
         private static IGame game = null;
-        private static int id;
-        private static ConcreteCallback cc = new ConcreteCallback();
+        private string player = "John";
+        private string player2 = "Adam";
+        private static Program obj = new Program();
         private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
-        private static List<Player> players = new List<Player>();
-        private static Player player;
+        private static bool gameOver = false;
 
-
-            static void Main(string[] args)
+        static void Main(string[] args)
+        {
+            bool input = false;
+            if (obj.connectToGame())
             {
-                if(connectToGame())
+
+                Console.WriteLine("Welcome to Rock-Paper-Scissors game");
+                Console.WriteLine("===================================");
+
+                while (!input)
                 {
-                    Console.ReadLine();
+
+                    waitHandle.WaitOne(); //?
+
+                    Console.WriteLine("Please choose:");
+                    Console.WriteLine("1. Rock\n2. Paper\n3. Scissors");
+
+                    string choice = Console.ReadLine();
+                    switch (choice)
+                    {
+                        case "1":
+                            input = true;
+                            break;
+                        case "2":
+                            input = true;
+                            break;
+                        case "3":
+                            input = true;
+                            break;
+                    }
+
                 }
-                else
-                {
-                    Console.WriteLine("ERROR: Too Many Clients Connected");
-                }
-             }
+            }
+        }
+
 
         // TODO: complete this 
         public void SendChoice(HandSignalType[] messages)
@@ -40,49 +65,52 @@ namespace RPS_Console
             try
             {
                 Console.WriteLine("sendChoice: " + messages);
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine("error in sendChoice: " + e);
             }
         }
-        
+
 
         private void UserExited()
         {
-            /*if (game != null)
+            if (game != null)
             {
                 // TODO: not sure what is supposed to be passed in 
                 game.Leave(player);
                 //game.Leave(player2);
                 Console.WriteLine("exited");
-            }      */       
+            }
         }
+
         // Sets up a connection to the WCF service and subscribes to the callback messages
-        private static bool connectToGame()
+        private bool connectToGame()
         {
             try
             {
                 // Configure the ABCs of using the MessageBoard service
-                DuplexChannelFactory<IGame> channel = new DuplexChannelFactory<IGame>(cc, "GameService");
+                DuplexChannelFactory<IGame> channel = new DuplexChannelFactory<IGame>(this, "GameService");
 
                 game = channel.CreateChannel();
 
-                id = game.Join();
-
-                player = new Player($"Player {id}", id);
-                players.Add(player);
-
-                if(id == 404)
+                if (game.Join(player))
                 {
+                    Console.WriteLine("get all msgs: " + game.GetAllChoices());
+                    return true;
+                }
+                else if (game.Join(player2))
+                {
+                    Console.WriteLine("get all msgs: " + game.GetAllChoices());
+                    return true;
+                }
+                else
+                {
+                    // Alias rejected by the service so nullify service proxies
+                    game = null;
+                    Console.WriteLine("ERROR: Alias in use. Please try again.");
                     return false;
                 }
-
-                Console.WriteLine("Welcome To the Game! ~\n");
-                Console.WriteLine($"Welcome player {player.PlayerName}");
-
-                return true;
-
-
             }
             catch (Exception e)
             {
