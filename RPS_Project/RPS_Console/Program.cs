@@ -26,70 +26,29 @@ namespace RPS_Console
 
         static void Main(string[] args)
         {
-            bool input = false;
             if (obj.connectToGame())
             {
 
                 Console.WriteLine("Welcome to Rock-Paper-Scissors game");
                 Console.WriteLine("===================================");
 
-                while (!input)
-                {
-
-                    //waitHandle.WaitOne(); //?
-                    Console.WriteLine($"Welcome Player: {counter}");
-                    Console.WriteLine("Please choose:");
-                    Console.WriteLine("1. Rock\n2. Paper\n3. Scissors");
-
-                    Console.Write("Please Choose an Option: ");
-                    string choice = Console.ReadLine();
-                    switch (choice)
-                    {
-                        case "1":
-                            game.PostChoice(HandSignalType.Rock);
-                            break;
-                        case "2":
-                            game.PostChoice(HandSignalType.Paper);
-                            break;
-                        case "3":
-                            game.PostChoice(HandSignalType.Scissors);
-                            break;
-                    }
-                    waitHandle.WaitOne();
-
-                    choices = game.GetAllChoices();
-
-                    game.SetPlayerHands(choices[1], choices[0]);
-
-                    Console.WriteLine(game.Playing());
-
-                    input = true;
-
-                }
-            }
-            Console.WriteLine("Do you want to play one more time?(y/n): "); 
-            switch (Console.ReadLine())
-            {
-                case "y":
-                    obj.PlayTheGame();
-                    break;
-                case "n": break;
+                obj.PlayTheGame();
             }
             Console.ReadLine();
         }
 
         public void PlayTheGame() 
         {
-            waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            
             bool input = false;
 
-            //game.SetPlayerHands(HandSignalType.None, HandSignalType.None);
+            game.SetPlayerHands(HandSignalType.None, HandSignalType.None);
 
             choices = null;
             game.ResetChoices();
             while (!input)
             {
-
+                //waitHandle.WaitOne();
                 //waitHandle.WaitOne(); //?
                 Console.WriteLine($"Welcome Player: {counter}");
                 Console.WriteLine("Please choose:");
@@ -113,12 +72,23 @@ namespace RPS_Console
 
                 choices = game.GetAllChoices();
 
-                game.SetPlayerHands(choices[0], choices[1]);
+                game.SetPlayerHands(choices[1], choices[0]);
 
                 Console.WriteLine(game.Playing());
 
                 input = true;
 
+            }
+            Console.WriteLine("Do you want to play one more time(The player one must go first)?(y/n): ");
+            string choiceToPlay = Console.ReadLine();
+            switch (choiceToPlay)
+            {
+                case "y":
+                    
+                    waitHandle.Reset();
+                    obj.PlayTheGame();              
+                    break;
+                case "n": break;
             }
         }
 
@@ -129,7 +99,7 @@ namespace RPS_Console
             {
                 foreach(var m in messages)
                 {
-                    Console.WriteLine(m);
+                    //Console.WriteLine(m);
                 }
 
                 if (messages.Length > 1)

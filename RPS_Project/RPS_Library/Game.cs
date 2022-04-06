@@ -109,6 +109,10 @@ namespace RPS_Library
             {
                 this.winner = playerTwo;
             }
+            else if(playerOne.HandSignal == playerTwo.HandSignal)
+            {
+                return "Draw!";
+            }
 
             return $"The winner is: {winner.PlayerName}";
 
