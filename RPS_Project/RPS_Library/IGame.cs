@@ -16,7 +16,8 @@ namespace RPS_Library
         bool Join(string clientName);
 
         [OperationContract(IsOneWay = true)]
-        void Leave();
+        //void Leave();
+        void Leave(string clientName);
 
         [OperationContract(IsOneWay = true)]
         void PostChoice(HandSignalType choice);

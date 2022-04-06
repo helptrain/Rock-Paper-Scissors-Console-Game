@@ -53,11 +53,18 @@ namespace RPS_Library
 
             ICallback callBack = OperationContext.Current.GetCallbackChannel<ICallback>();
             callbacks.Add(clientName.ToUpper(), callBack);
+            Console.WriteLine(clientName + " joined");
             return true;
         }
 
-        public void Leave()
+        public void Leave(string clientName)
         {
+            if(callbacks.ContainsKey(clientName.ToUpper()))
+            {
+                callbacks.Remove(clientName.ToUpper());
+                Console.WriteLine(clientName + " left");
+            }
+            /*
             ICallback cb = OperationContext.Current.GetCallbackChannel<ICallback>();
 
             if(callbacks.ContainsValue(cb))
@@ -67,6 +74,7 @@ namespace RPS_Library
                 callbacks.Remove(id);
                 Console.WriteLine("Service disconnected - unregistered from callbacks");
             }
+            */
         }
 
         public void PostChoice(HandSignalType choice)

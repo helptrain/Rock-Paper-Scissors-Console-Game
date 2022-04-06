@@ -16,8 +16,8 @@ namespace RPS_Console
     {
         // Member variables
         private static IGame game = null;
-        private string player = "John";
-        private string player2 = "Adam";
+        private string player = "player1";
+        private string player2 = "player2";
         private static Program obj = new Program();
         private static HandSignalType[] choices = new HandSignalType[0];
         private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
@@ -37,7 +37,7 @@ namespace RPS_Console
 
         public void PlayTheGame() 
         {
-            
+
             bool input = false;
 
             game.SetPlayerHands(HandSignalType.None, HandSignalType.None);
@@ -86,7 +86,8 @@ namespace RPS_Console
                     obj.PlayTheGame();              
                     break;
                 case "n":
-                    game.Leave();
+                    if (counter == 1) game.Leave(player);
+                    else if (counter == 2) game.Leave(player2);
                     Environment.Exit(0);
                     break;
             }         
