@@ -23,6 +23,7 @@ namespace RPS_Console
         private static Dictionary<string, HandSignalType> plays = new Dictionary<string, HandSignalType>();
         private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         public static int counter = 0;
+        public static bool retry = false;
 
         static void Main(string[] args)
         {
@@ -55,41 +56,53 @@ namespace RPS_Console
                 Console.WriteLine("Please choose:");
                 Console.WriteLine("1. Rock\n2. Paper\n3. Scissors");
 
-                Console.Write("Please Choose an Option: ");
-                string choice = Console.ReadLine();
-                switch (choice)
+                do
                 {
-                    case "1":
-                        if (counter == 1)
-                        {
-                            game.PostChoice(player, HandSignalType.Rock);
-                        }
-                        else if(counter == 2)
-                        {
-                            game.PostChoice(player2, HandSignalType.Rock);
-                        }
-                        break;
-                    case "2":
-                        if (counter == 1)
-                        {
-                            game.PostChoice(player, HandSignalType.Paper);
-                        }
-                        else if (counter == 2)
-                        {
-                            game.PostChoice(player2, HandSignalType.Paper);
-                        }
-                        break;
-                    case "3":
-                        if (counter == 1)
-                        {
-                            game.PostChoice(player, HandSignalType.Scissors);
-                        }
-                        else if (counter == 2)
-                        {
-                            game.PostChoice(player2, HandSignalType.Scissors);
-                        }
-                        break;
-                }
+                    Console.Write("Please Choose an Option: ");
+                    string choice = Console.ReadLine();
+                    switch (choice)
+                    {
+                        case "1":
+                            if (counter == 1)
+                            {
+                                game.PostChoice(player, HandSignalType.Rock);
+                                retry = true;
+                            }
+                            else if (counter == 2)
+                            {
+                                game.PostChoice(player2, HandSignalType.Rock);
+                                retry = true;
+                            }
+                            break;
+                        case "2":
+                            if (counter == 1)
+                            {
+                                game.PostChoice(player, HandSignalType.Paper);
+                                retry = true;
+                            }
+                            else if (counter == 2)
+                            {
+                                game.PostChoice(player2, HandSignalType.Paper);
+                                retry = true;
+                            }
+                            break;
+                        case "3":
+                            if (counter == 1)
+                            {
+                                game.PostChoice(player, HandSignalType.Scissors);
+                                retry = true;
+                            }
+                            else if (counter == 2)
+                            {
+                                game.PostChoice(player2, HandSignalType.Scissors);
+                                retry = true;
+                            }
+                            break;
+                        default:
+                            retry = false;
+                            break;
+                    }
+                } while (!retry);
                 waitHandle.WaitOne();
 
                 plays = game.GetAllChoices();
