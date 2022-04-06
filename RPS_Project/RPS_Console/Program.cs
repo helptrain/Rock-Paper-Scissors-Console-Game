@@ -15,6 +15,8 @@ namespace RPS_Console
     public partial class Program : ICallback
     {
         // Member variables
+        private static int player1Points = 0;
+        private static int player2Points = 0;
         private static IGame game = null;
         private string player = "player1";
         private string player2 = "player2";
@@ -110,7 +112,20 @@ namespace RPS_Console
                 game.SetPlayerOneHand(plays["player1"]);
                 game.SetPlayerTwoHand(plays["player2"]);
 
-                Console.WriteLine($"The Winner of the round was {game.Playing()}");
+                string winner = game.Playing();
+                Console.WriteLine($"The Winner of the round was {winner}");
+
+                if (winner == "Player 1")
+                {
+                    player1Points++;
+                }
+                else if (winner == "Player 2")
+                {
+                    player2Points++;
+                }
+                
+
+                Console.WriteLine($"Player 1 has accumulated {player1Points} points. Player 2 has accumulated {player2Points} points\n");
 
                 plays.Clear();
 
