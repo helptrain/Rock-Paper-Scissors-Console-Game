@@ -109,9 +109,13 @@ namespace RPS_Console
 
                 plays = game.GetAllChoices();
 
-                game.SetPlayerOneHand(plays["player1"]);
-                game.SetPlayerTwoHand(plays["player2"]);
-
+                // try block for player 2 to connect in time
+                try
+                {
+                    game.SetPlayerOneHand(plays["player1"]);
+                    game.SetPlayerTwoHand(plays["player2"]);
+                } catch (Exception e) {}
+                
                 string winner = game.Playing();
                 Console.WriteLine($"The Winner of the round was {winner}");
 
