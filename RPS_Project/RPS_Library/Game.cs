@@ -39,6 +39,7 @@ namespace RPS_Library
         {
             return choices.ToArray<HandSignalType>();
         }
+
         public bool Join(string clientName)
         {
             if (callbacks.ContainsKey(clientName.ToUpper()))
@@ -54,11 +55,17 @@ namespace RPS_Library
             callbacks.Add(clientName.ToUpper(), callBack);
             return true;
         }
-        public void Leave(string clientName)
+
+        public void Leave()
         {
-            if (callbacks.ContainsKey(clientName.ToUpper()))
+            ICallback cb = OperationContext.Current.GetCallbackChannel<ICallback>();
+
+            if(callbacks.ContainsValue(cb))
             {
-                callbacks.Remove(clientName.ToUpper());
+                int i = callbacks.Values.ToList().IndexOf(cb);
+                string id = callbacks.ElementAt(i).Key;
+                callbacks.Remove(id);
+                Console.WriteLine("Service disconnected - unregistered from callbacks");
             }
         }
 
@@ -115,7 +122,6 @@ namespace RPS_Library
             }
 
             return $"The winner is: {winner.PlayerName}";
-
         }
     }
 }

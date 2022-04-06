@@ -14,7 +14,6 @@ namespace RPS_Console
 {
     public partial class Program : ICallback
     {
-
         // Member variables
         private static IGame game = null;
         private string player = "John";
@@ -28,9 +27,8 @@ namespace RPS_Console
         {
             if (obj.connectToGame())
             {
-
                 Console.WriteLine("Welcome to Rock-Paper-Scissors game");
-                Console.WriteLine("===================================");
+                Console.WriteLine("===================================\n");
 
                 obj.PlayTheGame();
             }
@@ -83,13 +81,15 @@ namespace RPS_Console
             string choiceToPlay = Console.ReadLine();
             switch (choiceToPlay)
             {
-                case "y":
-                    
+                case "y":                   
                     waitHandle.Reset();
                     obj.PlayTheGame();              
                     break;
-                case "n": break;
-            }
+                case "n":
+                    game.Leave();
+                    Environment.Exit(0);
+                    break;
+            }         
         }
 
         // TODO: complete this 
@@ -114,17 +114,6 @@ namespace RPS_Console
         }
 
 
-        private void UserExited()
-        {
-            if (game != null)
-            {
-                // TODO: not sure what is supposed to be passed in 
-                game.Leave(player);
-                //game.Leave(player2);
-                Console.WriteLine("exited");
-            }
-        }
-
         // Sets up a connection to the WCF service and subscribes to the callback messages
         private bool connectToGame()
         {
@@ -138,13 +127,13 @@ namespace RPS_Console
                 if (game.Join(player))
                 {
                     counter = 1;
-                    Console.WriteLine("get all msgs: " + game.GetAllChoices());
+                    //Console.WriteLine("get all msgs: " + game.GetAllChoices());
                     return true;
                 }
                 else if (game.Join(player2))
                 {
                     counter = 2;
-                    Console.WriteLine("get all msgs: " + game.GetAllChoices());
+                    //Console.WriteLine("get all msgs: " + game.GetAllChoices());
                     return true;
                 }
                 else
