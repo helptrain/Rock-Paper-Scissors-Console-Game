@@ -8,6 +8,7 @@ namespace RPS_Library
 {
     public enum HandSignalType
     {
+        None,
         Rock,
         Paper,
         Scissors

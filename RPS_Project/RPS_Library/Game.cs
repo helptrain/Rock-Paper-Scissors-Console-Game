@@ -68,6 +68,11 @@ namespace RPS_Library
             UpdateAllPlayers();
         }
 
+        public void ResetChoices()
+        {
+            choices.Clear();
+        }
+
         //Triggers callback
         private void UpdateAllPlayers()
         {
@@ -103,6 +108,10 @@ namespace RPS_Library
             else if (playerOne.HandSignal == HandSignalType.Scissors && playerTwo.HandSignal == HandSignalType.Rock)
             {
                 this.winner = playerTwo;
+            }
+            else if(playerOne.HandSignal == playerTwo.HandSignal)
+            {
+                return "Draw!";
             }
 
             return $"The winner is: {winner.PlayerName}";

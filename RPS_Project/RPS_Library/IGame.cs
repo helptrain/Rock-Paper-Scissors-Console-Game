@@ -27,5 +27,7 @@ namespace RPS_Library
         string Playing();
         [OperationContract]
         void SetPlayerHands(HandSignalType p1, HandSignalType p2);
+        [OperationContract]
+        void ResetChoices();
     }
 }
