@@ -11,6 +11,7 @@ namespace RPS_Library
         public string PlayerName;
         public int PlayerId;
         public HandSignalType HandSignal;
+        public int score = 0;
 
         public Player(string name, int playerId)
         {

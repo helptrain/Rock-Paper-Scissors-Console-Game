@@ -10,6 +10,6 @@ namespace RPS_Library
     public interface ICallback
     {
         [OperationContract(IsOneWay = true)]
-        void SendChoice(HandSignalType[] messages);
+        void SendChoice(Dictionary<string, HandSignalType> dic);
     }
 }

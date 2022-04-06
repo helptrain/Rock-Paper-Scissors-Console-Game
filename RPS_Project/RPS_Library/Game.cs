@@ -13,6 +13,7 @@ namespace RPS_Library
         private const int MAX_CLIENTS = 2; //TODO: Change this if needed
 
         private Dictionary<string, ICallback> callbacks = new Dictionary<string, ICallback>();
+        private Dictionary<string, HandSignalType> playerChoices = new Dictionary<string, HandSignalType>();
         private List<HandSignalType> choices = new List<HandSignalType>();
 
         public Player playerOne = new Player("Player 1", 1);
@@ -29,15 +30,19 @@ namespace RPS_Library
             playerTwo = p2;
         }
 
-        public void SetPlayerHands(HandSignalType p1, HandSignalType p2)
+        public void SetPlayerOneHand(HandSignalType p)
         {
-            playerOne.PlaySignal(p1);
-            playerTwo.PlaySignal(p2);
+            playerOne.PlaySignal(p);
         }
 
-        public HandSignalType[] GetAllChoices()
+        public void SetPlayerTwoHand(HandSignalType p)
         {
-            return choices.ToArray<HandSignalType>();
+            playerTwo.PlaySignal(p);
+        }
+
+        public Dictionary<string, HandSignalType> GetAllChoices()
+        {
+            return playerChoices;
         }
 
         public bool Join(string clientName)
@@ -77,9 +82,9 @@ namespace RPS_Library
             */
         }
 
-        public void PostChoice(HandSignalType choice)
+        public void PostChoice(string playerName, HandSignalType play)
         {
-            choices.Insert(0, choice);
+            playerChoices.Add(playerName, play);
             UpdateAllPlayers();
         }
 
@@ -91,10 +96,9 @@ namespace RPS_Library
         //Triggers callback
         private void UpdateAllPlayers()
         {
-            HandSignalType[] choiceArr = choices.ToArray<HandSignalType>();
             foreach (ICallback c in callbacks.Values)
             {
-                c.SendChoice(choiceArr);
+                c.SendChoice(playerChoices);
             }
         }
 
@@ -129,7 +133,9 @@ namespace RPS_Library
                 return "Draw!";
             }
 
-            return $"The winner is: {winner.PlayerName}";
+            playerChoices.Clear();
+
+            return winner.PlayerName;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace RPS_Console
         private string player2 = "player2";
         private static Program obj = new Program();
         private static HandSignalType[] choices = new HandSignalType[0];
+        private static Dictionary<string, HandSignalType> plays = new Dictionary<string, HandSignalType>();
         private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         public static int counter = 0;
 
@@ -40,7 +41,9 @@ namespace RPS_Console
 
             bool input = false;
 
-            game.SetPlayerHands(HandSignalType.None, HandSignalType.None);
+            //game.SetPlayerHands(HandSignalType.None, HandSignalType.None);
+            game.SetPlayerOneHand(HandSignalType.None);
+            game.SetPlayerTwoHand(HandSignalType.None);
 
             choices = null;
             game.ResetChoices();
@@ -57,22 +60,46 @@ namespace RPS_Console
                 switch (choice)
                 {
                     case "1":
-                        game.PostChoice(HandSignalType.Rock);
+                        if (counter == 1)
+                        {
+                            game.PostChoice(player, HandSignalType.Rock);
+                        }
+                        else if(counter == 2)
+                        {
+                            game.PostChoice(player2, HandSignalType.Rock);
+                        }
                         break;
                     case "2":
-                        game.PostChoice(HandSignalType.Paper);
+                        if (counter == 1)
+                        {
+                            game.PostChoice(player, HandSignalType.Paper);
+                        }
+                        else if (counter == 2)
+                        {
+                            game.PostChoice(player2, HandSignalType.Paper);
+                        }
                         break;
                     case "3":
-                        game.PostChoice(HandSignalType.Scissors);
+                        if (counter == 1)
+                        {
+                            game.PostChoice(player, HandSignalType.Scissors);
+                        }
+                        else if (counter == 2)
+                        {
+                            game.PostChoice(player2, HandSignalType.Scissors);
+                        }
                         break;
                 }
                 waitHandle.WaitOne();
 
-                choices = game.GetAllChoices();
+                plays = game.GetAllChoices();
 
-                game.SetPlayerHands(choices[1], choices[0]);
+                game.SetPlayerOneHand(plays["player1"]);
+                game.SetPlayerTwoHand(plays["player2"]);
 
-                Console.WriteLine(game.Playing());
+                Console.WriteLine($"The Winner of the round was {game.Playing()}");
+
+                plays.Clear();
 
                 input = true;
 
@@ -94,16 +121,16 @@ namespace RPS_Console
         }
 
         // TODO: complete this 
-        public void SendChoice(HandSignalType[] messages)
+        public void SendChoice(Dictionary<string, HandSignalType> dic)
         {
             try
             {
-                foreach(var m in messages)
+                foreach(var m in dic)
                 {
                     //Console.WriteLine(m);
                 }
 
-                if (messages.Length > 1)
+                if (dic.Count > 1)
                 {
                     waitHandle.Set();
                 }

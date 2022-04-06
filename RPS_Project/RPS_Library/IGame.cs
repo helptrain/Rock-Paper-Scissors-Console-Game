@@ -20,14 +20,20 @@ namespace RPS_Library
         void Leave(string clientName);
 
         [OperationContract(IsOneWay = true)]
-        void PostChoice(HandSignalType choice);
+        void PostChoice(string playerName, HandSignalType play);
 
         [OperationContract]
-        HandSignalType[] GetAllChoices();
+        Dictionary<string, HandSignalType> GetAllChoices();
+
         [OperationContract]
         string Playing();
+
         [OperationContract]
-        void SetPlayerHands(HandSignalType p1, HandSignalType p2);
+        void SetPlayerOneHand(HandSignalType p);
+
+        [OperationContract]
+        void SetPlayerTwoHand(HandSignalType p);
+
         [OperationContract]
         void ResetChoices();
     }
