@@ -68,6 +68,11 @@ namespace RPS_Library
             UpdateAllPlayers();
         }
 
+        public void ResetChoices()
+        {
+            choices.Clear();
+        }
+
         //Triggers callback
         private void UpdateAllPlayers()
         {

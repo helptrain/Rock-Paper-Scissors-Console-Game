@@ -67,9 +67,60 @@ namespace RPS_Console
 
                 }
             }
+            Console.WriteLine("Do you want to play one more time?(y/n): "); 
+            switch (Console.ReadLine())
+            {
+                case "y":
+                    obj.PlayTheGame();
+                    break;
+                case "n": break;
+            }
             Console.ReadLine();
         }
 
+        public void PlayTheGame() 
+        {
+            waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            bool input = false;
+
+            //game.SetPlayerHands(HandSignalType.None, HandSignalType.None);
+
+            choices = null;
+            game.ResetChoices();
+            while (!input)
+            {
+
+                //waitHandle.WaitOne(); //?
+                Console.WriteLine($"Welcome Player: {counter}");
+                Console.WriteLine("Please choose:");
+                Console.WriteLine("1. Rock\n2. Paper\n3. Scissors");
+
+                Console.Write("Please Choose an Option: ");
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+                        game.PostChoice(HandSignalType.Rock);
+                        break;
+                    case "2":
+                        game.PostChoice(HandSignalType.Paper);
+                        break;
+                    case "3":
+                        game.PostChoice(HandSignalType.Scissors);
+                        break;
+                }
+                waitHandle.WaitOne();
+
+                choices = game.GetAllChoices();
+
+                game.SetPlayerHands(choices[0], choices[1]);
+
+                Console.WriteLine(game.Playing());
+
+                input = true;
+
+            }
+        }
 
         // TODO: complete this 
         public void SendChoice(HandSignalType[] messages)
