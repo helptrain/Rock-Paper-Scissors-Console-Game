@@ -67,6 +67,10 @@ namespace RPS_Library
             if(callbacks.ContainsKey(clientName.ToUpper()))
             {
                 callbacks.Remove(clientName.ToUpper());
+                if (playerChoices.ContainsKey(clientName))
+                {
+                    playerChoices.Remove(clientName);
+                }
                 Console.WriteLine(clientName + " left");
             }
             /*
