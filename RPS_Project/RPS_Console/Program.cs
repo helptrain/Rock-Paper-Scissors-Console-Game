@@ -21,7 +21,6 @@ namespace RPS_Console
         private string player = "player1";
         private string player2 = "player2";
         private static Program obj = new Program();
-        private static HandSignalType[] choices = new HandSignalType[0];
         private static Dictionary<string, HandSignalType> plays = new Dictionary<string, HandSignalType>();
         private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         public static int counter = 0;
@@ -31,7 +30,7 @@ namespace RPS_Console
         {
             if (obj.connectToGame())
             {
-                Console.WriteLine("Welcome to Rock-Paper-Scissors game");
+                Console.WriteLine("Welcome to Rock-Paper-Scissors!");
                 Console.WriteLine("===================================\n");
 
                 obj.PlayTheGame();
@@ -44,24 +43,21 @@ namespace RPS_Console
 
             bool input = false;
 
-            //game.SetPlayerHands(HandSignalType.None, HandSignalType.None);
             game.SetPlayerOneHand(HandSignalType.None);
             game.SetPlayerTwoHand(HandSignalType.None);
 
-            choices = null;
             game.ResetChoices();
+            Console.WriteLine($"Welcome Player {counter}\n");
             while (!input)
             {
-                //waitHandle.WaitOne();
-                //waitHandle.WaitOne(); //?
-                Console.WriteLine($"Welcome Player: {counter}");
-                Console.WriteLine("Please choose:");
+                Console.WriteLine("Please choose: (1,2,3)");
                 Console.WriteLine("1. Rock\n2. Paper\n3. Scissors");
 
                 do
                 {
                     Console.Write("Please Choose an Option: ");
                     string choice = Console.ReadLine();
+                    Console.WriteLine("You choose " + choice + "\n");
                     switch (choice)
                     {
                         case "1":
@@ -105,15 +101,16 @@ namespace RPS_Console
                             break;
                     }
                 } while (!retry);
+
                 waitHandle.WaitOne();
 
                 plays = game.GetAllChoices();
 
-                // try block for player 2 to connect in time
                 try
                 {
                     game.SetPlayerOneHand(plays["player1"]);
                     game.SetPlayerTwoHand(plays["player2"]);
+                    game.ResetChoices();
                 } catch (Exception e) {}
                 
                 string winner = game.Playing();
@@ -128,15 +125,13 @@ namespace RPS_Console
                     player2Points++;
                 }
                 
-
                 Console.WriteLine($"Player 1 has accumulated {player1Points} points. Player 2 has accumulated {player2Points} points\n");
 
-                plays.Clear();
-
                 input = true;
-
             }
-            Console.WriteLine("Do you want to play one more time(The player one must go first)?(y/n): ");
+
+
+            Console.WriteLine("Do you want to play one more time? (y/n): ");
             string choiceToPlay = Console.ReadLine();
             switch (choiceToPlay)
             {
@@ -152,7 +147,6 @@ namespace RPS_Console
             }         
         }
 
-        // TODO: complete this 
         public void SendChoice(Dictionary<string, HandSignalType> dic)
         {
             try
@@ -179,7 +173,6 @@ namespace RPS_Console
         {
             try
             {
-                // Configure the ABCs of using the MessageBoard service
                 DuplexChannelFactory<IGame> channel = new DuplexChannelFactory<IGame>(this, "GameService");
 
                 game = channel.CreateChannel();
@@ -187,13 +180,11 @@ namespace RPS_Console
                 if (game.Join(player))
                 {
                     counter = 1;
-                    //Console.WriteLine("get all msgs: " + game.GetAllChoices());
                     return true;
                 }
                 else if (game.Join(player2))
                 {
                     counter = 2;
-                    //Console.WriteLine("get all msgs: " + game.GetAllChoices());
                     return true;
                 }
                 else

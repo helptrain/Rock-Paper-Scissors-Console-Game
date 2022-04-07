@@ -10,18 +10,16 @@ namespace RPS_Library
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class Game : IGame
     {
-        private const int MAX_CLIENTS = 2; //TODO: Change this if needed
+        private const int MAX_CLIENTS = 2;
 
         private Dictionary<string, ICallback> callbacks = new Dictionary<string, ICallback>();
         private Dictionary<string, HandSignalType> playerChoices = new Dictionary<string, HandSignalType>();
-        private List<HandSignalType> choices = new List<HandSignalType>();
 
         public Player playerOne = new Player("Player 1", 1);
         public Player playerTwo = new Player("Player 2" , 2);
 
         public Player winner;
-
-        // needed for loading as a service
+        
         public Game() { }
 
         public Game(Player p1, Player p2)
@@ -73,28 +71,20 @@ namespace RPS_Library
                 }
                 Console.WriteLine(clientName + " left");
             }
-            /*
-            ICallback cb = OperationContext.Current.GetCallbackChannel<ICallback>();
-
-            if(callbacks.ContainsValue(cb))
-            {
-                int i = callbacks.Values.ToList().IndexOf(cb);
-                string id = callbacks.ElementAt(i).Key;
-                callbacks.Remove(id);
-                Console.WriteLine("Service disconnected - unregistered from callbacks");
-            }
-            */
         }
 
         public void PostChoice(string playerName, HandSignalType play)
         {
-            playerChoices.Add(playerName, play);
-            UpdateAllPlayers();
+            try
+            {
+                playerChoices.Add(playerName, play);
+                UpdateAllPlayers();
+            } catch(Exception e) {}         
         }
 
         public void ResetChoices()
         {
-            choices.Clear();
+            playerChoices.Clear();
         }
 
         //Triggers callback
