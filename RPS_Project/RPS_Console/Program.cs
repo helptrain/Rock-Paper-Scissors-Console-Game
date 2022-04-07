@@ -43,16 +43,11 @@ namespace RPS_Console
             Console.ReadLine();
         }
 
-<<<<<<< HEAD
-        // test
-
-=======
         /**
          * Method: PlayTheGame()
          * Accepts: void
          * Returns: void
          */
->>>>>>> d661771 (Added commenting and code cleanup)
         public void PlayTheGame() 
         {
 
