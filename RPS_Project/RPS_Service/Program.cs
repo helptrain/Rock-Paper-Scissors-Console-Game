@@ -1,8 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/**
+ * Project Name: RPS_Service
+ * File Name: Program.cs
+ * Author(s): L. Bas, S. Podkorytov, M. Ivanov, T. Pollard
+ * Date: 2022-04-06
+ * Context: Starts up the service provider
+ */
+
+using System;
 using System.ServiceModel;
 using RPS_Library;
 

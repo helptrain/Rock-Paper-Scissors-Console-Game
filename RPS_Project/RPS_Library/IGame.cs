@@ -1,9 +1,14 @@
-﻿using System;
+﻿/**
+ * Project Name: RPS_Library
+ * File Name: IGame.cs
+ * Author(s): L. Bas, S. Podkorytov, M. Ivanov, T. Pollard
+ * Date: 2022-04-06
+ * Context: Interface for Game consisting of service and operation contracts
+ */
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPS_Library
 {
@@ -14,7 +19,6 @@ namespace RPS_Library
         bool Join(string clientName);
 
         [OperationContract(IsOneWay = true)]
-        //void Leave();
         void Leave(string clientName);
 
         [OperationContract(IsOneWay = true)]

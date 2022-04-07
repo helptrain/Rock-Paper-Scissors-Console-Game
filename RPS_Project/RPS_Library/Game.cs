@@ -1,9 +1,14 @@
-﻿using System;
+﻿/**
+ * Project Name: RPS_Library
+ * File Name: Game.cs
+ * Author(s): L. Bas, S. Podkorytov, M. Ivanov, T. Pollard
+ * Date: 2022-04-06
+ * Context: Actual gameplay api that the client will connect to and use
+ */
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPS_Library
 {
@@ -17,7 +22,6 @@ namespace RPS_Library
 
         public Player playerOne = new Player("Player 1", 1);
         public Player playerTwo = new Player("Player 2" , 2);
-
         public Player winner;
         
         public Game() { }
@@ -28,21 +32,41 @@ namespace RPS_Library
             playerTwo = p2;
         }
 
+        /**
+         * Method: SetPlayerOneHand
+         * Accepts: HandSignalType
+         * Returns: void
+         */
         public void SetPlayerOneHand(HandSignalType p)
         {
             playerOne.PlaySignal(p);
         }
 
+        /**
+         * Method: SetPlayerTwoHand
+         * Accepts: HandSignalType
+         * Returns: void
+         */
         public void SetPlayerTwoHand(HandSignalType p)
         {
             playerTwo.PlaySignal(p);
         }
 
+        /**
+         * Method: GetAllChoices
+         * Accepts: void
+         * Returns: Dictionary of string & HandSignalType
+         */
         public Dictionary<string, HandSignalType> GetAllChoices()
         {
             return playerChoices;
         }
 
+        /**
+         * Method: Join
+         * Accepts: string
+         * Returns: boolean
+         */
         public bool Join(string clientName)
         {
             if (callbacks.ContainsKey(clientName.ToUpper()))
@@ -60,6 +84,11 @@ namespace RPS_Library
             return true;
         }
 
+        /**
+         * Method: Leave
+         * Accepts: string
+         * Returns: void
+         */
         public void Leave(string clientName)
         {
             if(callbacks.ContainsKey(clientName.ToUpper()))
@@ -73,20 +102,39 @@ namespace RPS_Library
             }
         }
 
+        /**
+         * Method: PostChoice
+         * Accepts: string, HandSignalType
+         * Returns: void
+         */
         public void PostChoice(string playerName, HandSignalType play)
         {
             try
             {
                 playerChoices.Add(playerName, play);
                 UpdateAllPlayers();
-            } catch(Exception e) {}         
+            } 
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }         
         }
 
+        /**
+         * Method: ResetChoices
+         * Accepts: void
+         * Returns: void
+         */
         public void ResetChoices()
         {
             playerChoices.Clear();
         }
 
+        /**
+         * Method: UpdateAllPlayers
+         * Accepts: void
+         * Returns: void
+         */
         //Triggers callback
         private void UpdateAllPlayers()
         {
@@ -96,6 +144,11 @@ namespace RPS_Library
             }
         }
 
+        /**
+         * Method: Playing
+         * Accepts: void
+         * Returns: string
+         */
         public string Playing()
         {
             if (playerOne.HandSignal == HandSignalType.Rock && playerTwo.HandSignal == HandSignalType.Scissors)

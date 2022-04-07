@@ -1,10 +1,14 @@
-﻿
+﻿/**
+ * Project Name: RPS_Console
+ * File Name: Program.cs
+ * Author(s): L. Bas, S. Podkorytov, M. Ivanov, T. Pollard
+ * Date: 2022-04-06
+ * Context: Actual gameplay logic that will connect to the game api 
+ */
+
 using System;
 using System.Windows;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ServiceModel;  // WCF types
 using System.Threading;
 using System.Runtime.InteropServices;   // Need this for DllImport()
@@ -23,12 +27,13 @@ namespace RPS_Console
         private static Program obj = new Program();
         private static Dictionary<string, HandSignalType> plays = new Dictionary<string, HandSignalType>();
         private static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+
         public static int counter = 0;
         public static bool retry = false;
 
         static void Main(string[] args)
         {
-            if (obj.connectToGame())
+            if (obj.ConnectToGame())
             {
                 Console.WriteLine("Welcome to Rock-Paper-Scissors!");
                 Console.WriteLine("===================================\n");
@@ -38,8 +43,16 @@ namespace RPS_Console
             Console.ReadLine();
         }
 
+<<<<<<< HEAD
         // test
 
+=======
+        /**
+         * Method: PlayTheGame()
+         * Accepts: void
+         * Returns: void
+         */
+>>>>>>> d661771 (Added commenting and code cleanup)
         public void PlayTheGame() 
         {
 
@@ -113,7 +126,11 @@ namespace RPS_Console
                     game.SetPlayerOneHand(plays["player1"]);
                     game.SetPlayerTwoHand(plays["player2"]);
                     game.ResetChoices();
-                } catch (Exception e) {}
+                } 
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
                 
                 string winner = game.Playing();
                 Console.WriteLine($"The Winner of the round was {winner}");
@@ -149,15 +166,15 @@ namespace RPS_Console
             }         
         }
 
+        /**
+         * Method: SendChoice
+         * Accepts: Dictionary of string & HandSignalType
+         * Returns: void
+         */
         public void SendChoice(Dictionary<string, HandSignalType> dic)
         {
             try
             {
-                foreach(var m in dic)
-                {
-                    //Console.WriteLine(m);
-                }
-
                 if (dic.Count > 1)
                 {
                     waitHandle.Set();
@@ -169,9 +186,13 @@ namespace RPS_Console
             }
         }
 
-
+        /**
+         * Method: ConnectToGame()
+         * Accepts: void
+         * Returns: boolean
+         */
         // Sets up a connection to the WCF service and subscribes to the callback messages
-        private bool connectToGame()
+        private bool ConnectToGame()
         {
             try
             {
